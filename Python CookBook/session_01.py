@@ -68,28 +68,130 @@ def lrgst_nd_smlst_by_kywrd():
 
 # -----------------------------------------------------------------------------
 # 5.实现一个优先级队列
-import heapq
+def priority_queue():
+	import heapq
 
-class PriorityQueue:
-	def __init__(self):
-		self._queque = []
-		self._index = 0
-	def push(self, item, priority):
-		heapq.heappush(self._queque, (-priority, self._index, item))
-		self._index += 1
-	def pop(self):
-		return heapq.heappop(self._queque)[-1]
+	class PriorityQueue:
+		def __init__(self):
+			self._queque = []
+			self._index = 0
+		def push(self, item, priority):
+			heapq.heappush(self._queque, (-priority, self._index, item)) # self._index?
+			self._index += 1
+		def pop(self):
+			return heapq.heappop(self._queque)[-1]
 
-class Item:
-	def __init__(self, name):
-		self.name = name
-	def __repr__(self):
-		return 'Item({!r})'.format(self.name)
+	class Item:
+		def __init__(self, name):
+			self.name = name
+		def __repr__(self):
+			return 'Item({!r})'.format(self.name)
 
-q = PriorityQueue()
-q.push(Item('foo'), 1)
-q.push(Item('bar'), 5)
-q.push(Item('spam'), 4)
-q.push(Item('grok'), 1)
-print q.pop()
-print q.pop()
+	q = PriorityQueue()
+	q.push(Item('foo'), 1)
+	q.push(Item('bar'), 5)
+	q.push(Item('spam'), 4)
+	q.push(Item('grok'), 1)
+	print q.pop()
+	print q.pop()
+# priority_queue()
+
+# 代码中包含了一个 (-priority, index, item) 的元组。
+# priority 为负数的目的是使得元素按照优先级从高到低排序。
+# index 变量的作用是保证同等优先级元素的正确排序。
+# 通过保存一个不断增加的 index 下标变量，可以确保元素按照它们插入的顺序排序。
+# index 变量也在相同优先级元素比较的时候起到重要作用。
+
+# 如果使用元组 (priority, item) ，只要两个元素的优先级不同就能比较。
+# 但如果两个元素优先级一样，那么比较操作就会出错
+# todo 元组对比大小
+# (2, 2, "d") > (2, 1, "a") True
+# (2, item("a")) > (2, item("d")) 无法对比
+
+
+# -----------------------------------------------------------------------------
+# 6.字典中的键值映射多个值
+
+def create_dict():
+	from collections import defaultdict
+
+	d = {
+		'a': [1, 2, 3],
+		'b': [4, 5]
+	}
+
+	e = {
+		'a': {1, 2, 3},
+		'b': {4, 5}
+	}
+
+	d = defaultdict(list)
+	d['a'].append(1)
+	d['a'].append(2)
+	d['b'].append(4)
+
+	e = defaultdict(set)
+	e['a'].add(1)
+	e['a'].add(2)
+	e['b'].add(4)
+
+	return d, e
+# print create_dict()
+
+# -----------------------------------------------------------------------------
+# 7.字典排序
+def odered_dict():
+	from collections import OrderedDict
+	d = OrderedDict()
+	d['foo'] = 1
+	d['bar'] = 2
+	d['spam'] = 3
+	d['foo'] = 4
+
+	e = {}
+	e['foo'] = 1
+	e['bar'] = 2
+	e['spam'] = 3
+	e['foo'] = 4
+
+
+	print d, e
+# odered_dict()
+# OrderedDict 内部维护着一个根据键插入顺序排序的双向链表。
+# 对于已经存在的键的重复赋值不会改变键的顺序。 
+# 一个 OrderedDict 的大小是普通字典的两倍，因为它内部维护着另外一个链表。
+# 如果你要构建一个需要大量 OrderedDict 实例的数据结构的时候 
+# 得仔细权衡一下是否使用 OrderedDict 带来的好处要大过额外内存消耗的影响。
+
+
+# -----------------------------------------------------------------------------
+# 8.字典的运算
+def c:
+	price = {
+		'ACME': 45.23,
+		'AAPL':612.8,
+		'IBM': 205,
+		'HPQ': 37,
+		'FB':10.75
+	}
+
+
+	min_price = min(zip(price.values(), price.keys()))
+	max_price = max(zip(price.values(), price.keys()))
+	print min_price, max_price
+
+	price_sorted = sorted(zip(price.values(), price.keys()))
+	print price_sorted
+	# 需要注意的是 zip() 函数创建的是一个只能访问一次的迭代器。
+
+	min_key = min(price, key=lambda k: price[k])
+	max_key = max(price, key=lambda k: price[k])
+	print min_key, max_key
+
+	print sorted(price, key=lambda k:price[k])
+	print sorted(price, key=lambda d:d[0]) # ?
+	print sorted(price, key=lambda d:d[1]) # ?
+# dict_compute()
+
+# -----------------------------------------------------------------------------
+# 9.查找两字典的相同点
