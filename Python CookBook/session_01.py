@@ -13,36 +13,35 @@ def find_argument(list=(2,3,4,5)):
 
 # -----------------------------------------------------------------------------
 # 2.解压可迭代对象赋值给多个变量 # todo Python3?
-# def drop_first_last(grades=(60, 70, 77, 80, 99, 100)):
-# 	first, *middle, last = grades
-# 	return avg(middle)
-# print drop_first_last()
+def drop_first_last(grades=(60, 70, 77, 80, 99, 100)):
+	first, *middle, last = grades
+	return(middle)
+# print(drop_first_last())
 
 
 # -----------------------------------------------------------------------------
 # 3.保留最后 N 个元素 # todo Python3
-def search(lines, pattern, history=5):
-	from collections import deque
-	previous_lines = deque(maxlen=history)
-	for li in lines:
-		if pattern in li:
-			yield li, previous_lines
-		previous_lines.append(li)
-
- # if __name__ == '__main__':
- # 	with open(r'...txt') as f:
- # 		for line, prevlines in search(f, 'python', 5):
- # 			for pline in prevlines:
- # 				print (pline, end='')
- # 			print(line, end='')
- # 			print('-' * 20)
-
+def search_last():
+	def search(lines, pattern, history=5):
+		from collections import deque
+		previous_lines = deque(maxlen=history)
+		for li in lines:
+			if pattern in li:
+				yield li, previous_lines # todo??
+			previous_lines.append(li)
+	with open(r'test.txt') as f:
+		for line, prevlines in search(f, 'python', 5):
+			for pline in prevlines:
+				print (pline, end='')
+			print(line, end='')
+			print('-' * 20)
+# search_last()
 
 # -----------------------------------------------------------------------------
 # 4.查找最大或最小的 N 个元素
 def largest_and_smallest(nums=[1,8,11,-4,18,23 ]):
 	import heapq
-	print heapq.nlargest(3, nums), heapq.nsmallest(3, nums)
+	print(heapq.nlargest(3, nums), heapq.nsmallest(3, nums))
 # largest_and_smallest()
 
 def lrgst_nd_smlst_by_kywrd():		
@@ -57,7 +56,7 @@ def lrgst_nd_smlst_by_kywrd():
 	]
 	cheap = heapq.nlargest(1, portfolio, key=lambda s:s['price'])
 	expensive = heapq.nsmallest(1, portfolio, key=lambda s:s['price'])
-	print cheap, expensive
+	print(cheap, expensive)
 # lrgst_nd_smlst_by_kywrd()
 
 # 需要在正确场合使用函数 nlargest() 和 nsmallest() 才能发挥它们的优势 
@@ -92,8 +91,8 @@ def priority_queue():
 	q.push(Item('bar'), 5)
 	q.push(Item('spam'), 4)
 	q.push(Item('grok'), 1)
-	print q.pop()
-	print q.pop()
+	print(q.pop())
+	print(q.pop())
 # priority_queue()
 
 # 代码中包含了一个 (-priority, index, item) 的元组。
@@ -155,7 +154,7 @@ def odered_dict():
 	e['foo'] = 4
 
 
-	print d, e
+	print(d, e)
 # odered_dict()
 # OrderedDict 内部维护着一个根据键插入顺序排序的双向链表。
 # 对于已经存在的键的重复赋值不会改变键的顺序。 
@@ -166,7 +165,7 @@ def odered_dict():
 
 # -----------------------------------------------------------------------------
 # 8.字典的运算
-def c:
+def dict_compute():
 	price = {
 		'ACME': 45.23,
 		'AAPL':612.8,
@@ -178,20 +177,68 @@ def c:
 
 	min_price = min(zip(price.values(), price.keys()))
 	max_price = max(zip(price.values(), price.keys()))
-	print min_price, max_price
+	print(min_price, max_price)
 
 	price_sorted = sorted(zip(price.values(), price.keys()))
-	print price_sorted
+	print(price_sorted)
 	# 需要注意的是 zip() 函数创建的是一个只能访问一次的迭代器。
 
 	min_key = min(price, key=lambda k: price[k])
 	max_key = max(price, key=lambda k: price[k])
-	print min_key, max_key
+	print(min_key, max_key)
 
-	print sorted(price, key=lambda k:price[k])
-	print sorted(price, key=lambda d:d[0]) # ?
-	print sorted(price, key=lambda d:d[1]) # ?
+	print(sorted(price, key=lambda k:price[k]))
+	print(sorted(price, key=lambda d:d[0])) # ?
+	print(sorted(price, key=lambda d:d[1])) # ?
 # dict_compute()
 
 # -----------------------------------------------------------------------------
-# 9.查找两字典的相同点
+# 9.查找两字典的相同点 python3
+def find_same_in_dict():
+	a = {
+		'x': 1,
+		'y': 2,
+		'z': 3
+	}
+
+	b = {
+		'w': 10,
+		'x': 11,
+		'y': 2
+	}
+
+	# 集合操作
+	print(a.keys() & b.keys())
+	print(a.keys() - b.keys())
+	print(a.items() & b.items())
+
+	# 排除指定键
+	# 由n个键值对 key:a[key] 组成的可迭代对象，参数 key 来自 a.keys()
+	c = {key:a[key] for key in a.keys() - {'z', 'w'}} 
+	print(c)
+find_same_in_dict()
+
+# items() 方法返回包含键值对的元素对象。
+# 这个对象同样也支持集合操作，并且可以被用来查找两个字典有哪些相同的键值对。
+
+# values() 方法并不支持集合操作。
+# 因为值视图不保证所有值互不相同,某些集合操作会出现问题.
+# 如果硬要在值上面执行这些集合操作，可以先将值集合转换成 set，然后再执行集合运算。
+
+
+
+# -----------------------------------------------------------------------------
+# 10.删除序列相同元素并保持顺序
+def dedupe_1(items): # hashable 类型
+	seen = set()
+	for item in items:
+		if item not in seen:
+			yield item
+			seen.add(item)
+a = [1, 5, 2, 1, 9, 1, 5, 10]
+print(list(dedupe_1(a))) # [1, 5, 2, 9, 10]
+
+# def dedupe(items, key=None):
+# 	seen = set()
+# 	for item in items:
+		
