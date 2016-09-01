@@ -37,6 +37,7 @@ def search_last():
 			print('-' * 20)
 # search_last()
 
+
 # -----------------------------------------------------------------------------
 # 4.查找最大或最小的 N 个元素
 def largest_and_smallest(nums=[1,8,11,-4,18,23 ]):
@@ -137,6 +138,7 @@ def create_dict():
 	return d, e
 # print create_dict()
 
+
 # -----------------------------------------------------------------------------
 # 7.字典排序
 def odered_dict():
@@ -192,6 +194,7 @@ def dict_compute():
 	print(sorted(price, key=lambda d:d[1])) # ?
 # dict_compute()
 
+
 # -----------------------------------------------------------------------------
 # 9.查找两字典的相同点 python3
 def find_same_in_dict():
@@ -216,7 +219,7 @@ def find_same_in_dict():
 	# 由n个键值对 key:a[key] 组成的可迭代对象，参数 key 来自 a.keys()
 	c = {key:a[key] for key in a.keys() - {'z', 'w'}} 
 	print(c)
-find_same_in_dict()
+# find_same_in_dict()
 
 # items() 方法返回包含键值对的元素对象。
 # 这个对象同样也支持集合操作，并且可以被用来查找两个字典有哪些相同的键值对。
@@ -226,19 +229,105 @@ find_same_in_dict()
 # 如果硬要在值上面执行这些集合操作，可以先将值集合转换成 set，然后再执行集合运算。
 
 
-
 # -----------------------------------------------------------------------------
 # 10.删除序列相同元素并保持顺序
-def dedupe_1(items): # hashable 类型
-	seen = set()
-	for item in items:
-		if item not in seen:
-			yield item
-			seen.add(item)
-a = [1, 5, 2, 1, 9, 1, 5, 10]
-print(list(dedupe_1(a))) # [1, 5, 2, 9, 10]
+def dedupe():
+	def dedupe_1(items): # hashable 类型
+		seen = set()
+		for item in items:
+			if item not in seen:
+				yield item
+				seen.add(item)
+	a = [1, 5, 2, 1, 9, 1, 5, 10]
+	print(list(dedupe_1(a))) # [1, 5, 2, 9, 10]
 
-# def dedupe(items, key=None):
-# 	seen = set()
-# 	for item in items:
-		
+	def dedupe_2(items, key=None): # 非 hashable 类型
+		seen = set()
+		for item in items:
+			val = item if key is None else key(item)
+			if val not in seen: 
+				yield item
+				seen.add(val)
+
+	b = [
+		{'x': 1, 'y': 2}, 
+		{'x': 1, 'y': 3}, 
+		{'x': 1, 'y': 2}, 
+		{'x': 2, 'y': 4}, 
+		{'x': 1, 'y': 2}, 
+		{'x': 1, 'y': 3}, 
+		{'x': 2, 'y': 4}
+	]
+	print(list(dedupe_2(b, lambda d:(d['x'], d['y']))))
+	# 如果仅消除重复元素，通常只要构造一个集合 set()
+	
+
+# -----------------------------------------------------------------------------
+# 11.命名切片
+def name_slice():
+	record = '..........325..........432.5.........'
+	SHARES = slice(10, 13) # (start, end, step )
+	PRICES = slice(23, 28)
+	cost = int(record[SHARES]) * float(record[PRICES])
+	print(cost)
+	# 代码中如果出现大量的硬编码下标值会使得可读性和可维护性大大降低。
+	# 内置的 slice() 函数创建了一个切片对象，可以被用在任何切片允许使用的地方。 
+
+	a = slice(0, 9, 2)
+	s = "hello,world"
+	print(a.indices(len(s)))
+	for i in range(*a.indices(len(s))):
+		print(s[i])
+	# 可以通过调用切片的 indices(size) 方法将它映射到一个确定大小的序列上，
+	# 这个方法返回一个三元组 (start, stop, step) ，所有值都会被合适的缩小以满足边界限制，
+
+
+# -----------------------------------------------------------------------------
+# 12.序列中出现次数最多的元素
+def commen_counter():
+	word = ['big', 'big', 'small', 'large', 'large', 'small', 'large']
+	from collections import Counter
+	word_counts = Counter(word)
+	top_three = word_counts.most_common(3)
+	print(top_three)
+
+# commen_counter()
+
+# return [('large', 3), ('big', 2), ('small', 2)]
+# Counter 对象实际是一个字典：word_counter['large'] == 3
+# Counter 对象可以跟数学运算符号结合：
+	# a = Counter(words)
+	# b = Counter(morewords)
+	# c = a + b
+	# d = a - b
+
+
+# -----------------------------------------------------------------------------
+# 13.通过键排序一个字典列表
+def sort_dic_list_by_key():
+	rows = [
+		{'fname': 'Brain', 'lname': 'Jones', 'uid': '1001'},
+		{'fname': 'David', 'lname': 'Beazley', 'uid': '1002'},
+		{'fname': 'Jhon', 'lname': 'Cleese', 'uid': '1003'},
+		{'fname': 'Big', 'lname': 'Jones', 'uid': '1004'}
+	]
+
+	from operator import itemgetter
+	
+	rows_by_fname = sorted(rows, key=itemgetter('fname'))
+	print(rows_by_fname)
+
+	rows_by_uid = sorted(rows, key=itemgetter('uid'))
+	print(rows_by_uid)
+
+	# itemgetter() 函数支持多个 key
+	rows_by_name = sorted(rows, key=itemgetter('fname', 'lname')) 
+	print(rows_by_name)
+
+
+# sort_dic_list_by_key()
+
+
+
+
+# cd d:\tmp\huiyaoren\learn_python\'python cookbook'
